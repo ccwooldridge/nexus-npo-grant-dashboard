@@ -1,808 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS LOI Generator · Singularity Holdings PBC</title>
-
-<!-- ════════════════════════════════════════════════════════════════════
-  NEXUS LOI GENERATOR · v1.0
-  Generic-first: edit ONE letter object → infinite recipients.
-  Top 5 (active outreach) + 5 round-2 stubs ready.
-  Print to PDF, save, send. Single-file HTML.
-  ════════════════════════════════════════════════════════════════════ -->
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-
-<style>
-:root {
-  --paper:        #f8f1de;     /* warm cream/ivory paper */
-  --paper-edge:   #ebd9b3;
-  --ink:          #1a2628;
-  --ink-soft:     #2c3e42;
-  --ink-faint:    #5a6c70;
-  --teal:         #0d9488;
-  --teal-deep:    #075057;
-  --gold:         #c8951e;
-  --coral:        #d05b4f;
-
-  --trench-deep:  #03161a;
-  --trench-mid:   #062028;
-  --chrome-ink:   #d8e8e6;
-  --chrome-faint: rgba(216, 232, 230, 0.18);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html, body {
-  background: var(--trench-deep);
-  font-family: 'Syne', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  color: var(--chrome-ink);
-  min-height: 100vh;
-}
-
-/* ════════════════ ADMIN CHROME (hidden in print) ════════════════ */
-.admin-chrome {
-  background: var(--trench-mid);
-  border-bottom: 1px solid var(--chrome-faint);
-  padding: 1.5rem 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  backdrop-filter: blur(12px);
-}
-
-.admin-row {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  flex-wrap: wrap;
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-.admin-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
-  letter-spacing: 0.15em;
-  color: var(--chrome-ink);
-}
-.admin-title span { color: var(--gold); }
-
-.admin-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(216, 232, 230, 0.6);
-  margin-right: 0.5rem;
-}
-
-select, button.admin-btn {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.8rem;
-  background: var(--trench-deep);
-  color: var(--chrome-ink);
-  border: 1px solid var(--chrome-faint);
-  padding: 0.6rem 0.9rem;
-  cursor: pointer;
-  letter-spacing: 0.05em;
-}
-select { min-width: 280px; }
-select:hover, button.admin-btn:hover { border-color: var(--gold); color: var(--gold); }
-
-button.admin-btn.primary {
-  background: var(--gold);
-  color: var(--trench-deep);
-  border-color: var(--gold);
-  font-weight: 500;
-}
-button.admin-btn.primary:hover {
-  background: #e8b53d;
-  border-color: #e8b53d;
-}
-
-.admin-tip {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.7rem;
-  color: rgba(216, 232, 230, 0.5);
-  margin-top: 0.75rem;
-  text-align: center;
-}
-
-/* ════════════════ LETTER PAGE ════════════════ */
-.page-wrapper {
-  padding: 3rem 1rem;
-  display: flex;
-  justify-content: center;
-}
-
-.letter {
-  background: var(--paper);
-  width: 8.5in;
-  min-height: 11in;
-  max-width: 100%;
-  padding: 1in 0.85in;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.3);
-  color: var(--ink);
-  position: relative;
-  font-family: 'Syne', sans-serif;
-  background-image:
-    linear-gradient(180deg, var(--paper) 0%, var(--paper-edge) 100%);
-}
-
-.letter::before {
-  /* subtle paper grain */
-  content: '';
-  position: absolute; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  mix-blend-mode: multiply;
-}
-
-/* ════════════════ LETTERHEAD ════════════════ */
-.letterhead {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding-bottom: 1.25rem;
-  border-bottom: 2px solid var(--teal-deep);
-  margin-bottom: 0.4rem;
-  position: relative;
-}
-.letterhead::after {
-  content: '';
-  position: absolute;
-  bottom: -6px; left: 0;
-  width: 100px; height: 2px;
-  background: var(--gold);
-}
-
-.letterhead-mark {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.2rem;
-  letter-spacing: 0.18em;
-  line-height: 1;
-  color: var(--teal-deep);
-}
-.letterhead-mark .accent { color: var(--gold); }
-
-.letterhead-mark .sub {
-  display: block;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
-  color: var(--ink-faint);
-  margin-top: 0.3rem;
-  font-weight: 400;
-}
-
-.letterhead-contact {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.7rem;
-  line-height: 1.7;
-  color: var(--ink-soft);
-  text-align: right;
-}
-.letterhead-contact .name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem;
-  letter-spacing: 0.1em;
-  color: var(--teal-deep);
-  display: block;
-  margin-bottom: 0.2rem;
-}
-
-/* ════════════════ LETTER BODY ════════════════ */
-.letter-meta {
-  margin-top: 2rem;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.75rem;
-  color: var(--ink-faint);
-  letter-spacing: 0.05em;
-}
-
-.recipient-block {
-  margin-top: 1.25rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--ink);
-}
-.recipient-block .recipient-name {
-  font-weight: 600;
-}
-.recipient-block .recipient-title {
-  font-style: italic;
-  color: var(--ink-soft);
-}
-
-.subject-line {
-  margin-top: 1.5rem;
-  padding: 0.6rem 0;
-  border-top: 1px solid rgba(7, 80, 87, 0.2);
-  border-bottom: 1px solid rgba(7, 80, 87, 0.2);
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 1.1rem;
-  color: var(--teal-deep);
-}
-.subject-line strong {
-  font-family: 'DM Mono', monospace;
-  font-style: normal;
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-right: 0.6rem;
-  font-weight: 500;
-}
-
-.salutation {
-  margin-top: 1.75rem;
-  font-size: 1rem;
-  color: var(--ink);
-}
-
-.letter-body {
-  margin-top: 1rem;
-}
-.letter-body p {
-  font-size: 0.97rem;
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  color: var(--ink);
-  text-align: justify;
-  hyphens: auto;
-}
-.letter-body p strong {
-  color: var(--teal-deep);
-}
-
-.letter-body .pull {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
-  font-size: 1.05rem;
-  color: var(--teal-deep);
-  border-left: 3px solid var(--gold);
-  padding: 0.4rem 0 0.4rem 1rem;
-  margin: 1rem 0;
-}
-
-/* ════════════════ ASK BLOCK ════════════════ */
-.ask-block {
-  margin-top: 1.25rem;
-  background: rgba(13, 148, 136, 0.06);
-  border: 1px solid rgba(7, 80, 87, 0.25);
-  border-left: 4px solid var(--gold);
-  padding: 1rem 1.2rem;
-}
-.ask-block .label {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 0.5rem;
-}
-.ask-block ul {
-  list-style: none;
-  padding: 0;
-}
-.ask-block li {
-  font-size: 0.92rem;
-  line-height: 1.5;
-  padding: 0.3rem 0 0.3rem 1.2rem;
-  position: relative;
-  color: var(--ink);
-}
-.ask-block li::before {
-  content: '→';
-  position: absolute;
-  left: 0;
-  color: var(--coral);
-  font-weight: 700;
-}
-
-/* ════════════════ SIGNATURE BLOCK ════════════════ */
-.signature {
-  margin-top: 2rem;
-}
-.signature .closing {
-  font-size: 0.97rem;
-  color: var(--ink);
-  margin-bottom: 3.5rem;
-}
-.signature .name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
-  letter-spacing: 0.1em;
-  color: var(--teal-deep);
-}
-.signature .title {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  color: var(--ink-soft);
-  margin-top: 0.2rem;
-}
-.signature .badges {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gold);
-  margin-top: 0.4rem;
-}
-
-/* ════════════════ FOOTER ════════════════ */
-.letter-footer {
-  margin-top: 2rem;
-  padding-top: 0.75rem;
-  border-top: 1px solid rgba(7, 80, 87, 0.2);
-  font-family: 'DM Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.15em;
-  color: var(--ink-faint);
-  text-align: center;
-  text-transform: uppercase;
-}
-
-/* ════════════════ STATUS BADGE ════════════════ */
-.status-badge {
-  display: inline-block;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-}
-.status-badge.active {
-  background: rgba(78, 240, 168, 0.15);
-  color: #4ef0a8;
-  border: 1px solid rgba(78, 240, 168, 0.4);
-}
-.status-badge.round2 {
-  background: rgba(200, 149, 30, 0.15);
-  color: var(--gold);
-  border: 1px solid rgba(200, 149, 30, 0.4);
-}
-
-/* ════════════════ PRINT STYLES (PDF EXPORT) ════════════════ */
-@media print {
-  @page { size: letter portrait; margin: 0; }
-  html, body { background: white; }
-  .admin-chrome, .admin-tip { display: none !important; }
-  .page-wrapper { padding: 0; }
-  .letter {
-    box-shadow: none;
-    width: 100%;
-    min-height: 11in;
-    max-width: none;
-    padding: 0.85in 0.85in;
-  }
-}
-
-@media (max-width: 700px) {
-  .letter { padding: 0.5in 0.4in; }
-  .letterhead { flex-direction: column; gap: 0.75rem; }
-  .letterhead-contact { text-align: left; }
-  .admin-row { flex-direction: column; align-items: stretch; }
-  select { min-width: 100%; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charges4 Change | Funding & Grant Intelligence Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals & Deep Teal (Stone, Teal, Amber accents) -->
+    <!-- Application Structure Plan: The SPA is structured into three core functional zones to serve as both a strategic document and a tracking sheet. 1. Executive Summary & Visual Analytics (Provides immediate situational awareness of the funding landscape). 2. Strategic Initiatives Deep-Dive (The "Doc" portion, detailing LA28, Smart City, and AI specific pathways). 3. Interactive Opportunity Tracker (The "Sheet" portion, a filterable data table for pipeline management). This structure guides the user from high-level strategy down to actionable tracking. -->
+    <!-- Visualization & Content Choices: 1. Funding by Category -> Goal: Inform distribution -> Viz: Doughnut Chart (Chart.js) -> Justification: Shows proportion of tech vs. marketing vs. general funding. 2. Deadlines Timeline -> Goal: Organize/Change over time -> Viz: Bar Chart (Chart.js) -> Justification: Highlights urgency and cash flow planning. 3. Opportunity Tracker -> Goal: Organize & Manage -> Viz: Interactive Data Table (HTML/JS) -> Justification: Fulfills the user's need for a "Sheet" to track touchpoints and progress. NO SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fafaf9; color: #1c1917; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        .nav-active { border-bottom: 2px solid #0f766e; color: #0f766e; font-weight: 600; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f5f5f4; }
+        ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+    </style>
 </head>
-<body>
+<body class="antialiased">
 
-<div class="admin-chrome no-print">
-  <div class="admin-row">
-    <div class="admin-title">NEXUS · <span>LOI</span> · GENERATOR</div>
-    <div style="display:flex; align-items:center; gap:0.5rem;">
-      <span class="admin-label">Recipient</span>
-      <select id="recipientSelect"></select>
-    </div>
-    <button class="admin-btn primary" onclick="window.print()">⎙ Print / Save PDF</button>
-    <button class="admin-btn" onclick="copyLetterText()">⎘ Copy Plain Text</button>
-    <span id="statusBadge"></span>
-  </div>
-  <div class="admin-tip">
-    Edit the letter directly inline — content is contenteditable. Or update the LOI_DATA object in source for permanent edits. Print uses recipient name as filename.
-  </div>
-</div>
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">⚡</span>
+                    <span class="font-bold text-xl text-teal-800 tracking-tight">Charges4 Change</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <a href="#overview" class="text-stone-600 hover:text-teal-700 px-3 py-2 text-sm font-medium transition-colors">Overview</a>
+                    <a href="#strategy" class="text-stone-600 hover:text-teal-700 px-3 py-2 text-sm font-medium transition-colors">GTM Strategy</a>
+                    <a href="#initiatives" class="text-stone-600 hover:text-teal-700 px-3 py-2 text-sm font-medium transition-colors">Strategic Initiatives</a>
+                    <a href="#tracker" class="text-stone-600 hover:text-teal-700 px-3 py-2 text-sm font-medium transition-colors">Opportunity Tracker</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-<div class="page-wrapper">
-  <article class="letter" id="letter" contenteditable="false">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <section id="overview" class="mb-16 scroll-mt-20">
+            <div class="bg-teal-700 rounded-2xl p-8 text-white shadow-lg mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">Funding & Sponsorship Intelligence</h1>
+                <p class="text-teal-100 text-lg max-w-3xl leading-relaxed">
+                    This interactive dashboard synthesizes available grants, sponsorships, and endowments specifically curated for California-based NPOs, optimized for <strong>Charges4 Change</strong>. It covers traditional funding, hardware/software allocations, and highly specialized initiatives including LA 2028 Olympics, LA Smart City development, and AI-for-Good grants.
+                </p>
+            </div>
 
-    <header class="letterhead">
-      <div class="letterhead-mark">
-        NEXUS<span class="accent">.</span>
-        <span class="sub">SINGULARITY HOLDINGS PBC · CIVIC OS</span>
-      </div>
-      <div class="letterhead-contact">
-        <span class="name">Chris Wooldridge</span>
-        Founder · ATLAS-000001<br>
-        chris@singularityholdings.org<br>
-        (213) 854-8337<br>
-        Los Angeles, California
-      </div>
-    </header>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 flex items-center">
+                    <div class="text-4xl mr-4">💰</div>
+                    <div>
+                        <p class="text-sm text-stone-500 font-medium uppercase tracking-wide">Total Tracked Value</p>
+                        <p class="text-2xl font-bold text-stone-800" id="totalValueStat">$0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 flex items-center">
+                    <div class="text-4xl mr-4">🎯</div>
+                    <div>
+                        <p class="text-sm text-stone-500 font-medium uppercase tracking-wide">Active Opportunities</p>
+                        <p class="text-2xl font-bold text-stone-800" id="totalOppsStat">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 flex items-center">
+                    <div class="text-4xl mr-4">⏳</div>
+                    <div>
+                        <p class="text-sm text-stone-500 font-medium uppercase tracking-wide">Next Deadline</p>
+                        <p class="text-2xl font-bold text-stone-800 text-amber-600" id="nextDeadlineStat">Calculatng...</p>
+                    </div>
+                </div>
+            </div>
 
-    <div class="letter-meta" id="dateLine">— DATE —</div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                    <h3 class="text-lg font-bold text-stone-800 mb-2">Funding Distribution by Category</h3>
+                    <p class="text-sm text-stone-500 mb-6">A breakdown of where potential resources are allocated, helping prioritize application efforts based on organizational needs.</p>
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100">
+                    <h3 class="text-lg font-bold text-stone-800 mb-2">Application Timeline</h3>
+                    <p class="text-sm text-stone-500 mb-6">Upcoming deadlines grouped by month to assist with proposal writing and resource scheduling.</p>
+                    <div class="chart-container">
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <div class="recipient-block" id="recipientBlock"></div>
+        <section id="strategy" class="mb-16 scroll-mt-20">
+            <div class="mb-8 border-b border-stone-200 pb-4">
+                <h2 class="text-2xl font-bold text-stone-800">The "Trojan Horse" Acquisition Strategy</h2>
+                <p class="text-stone-600 mt-2">Our multi-stage go-to-market plan to onboard NPOs into the NExUS ecosystem using funding audits as the primary hook.</p>
+            </div>
 
-    <div class="subject-line"><strong>RE:</strong> <span id="subjectText"></span></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Phase 1 -->
+                <div class="bg-stone-900 rounded-xl p-6 shadow-md relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">🔍</div>
+                    <span class="text-teal-400 font-bold text-sm tracking-wider uppercase mb-2 block">Phase 1</span>
+                    <h3 class="text-xl font-bold text-white mb-3">The Hook</h3>
+                    <ul class="text-stone-300 text-sm space-y-3 relative z-10">
+                        <li class="flex items-start"><span class="text-teal-500 mr-2">✓</span> Full Grant, Funding, & Charitable Donations Audit.</li>
+                        <li class="flex items-start"><span class="text-teal-500 mr-2">✓</span> Identify exactly what they are missing.</li>
+                        <li class="flex items-start"><span class="text-teal-500 mr-2">✓</span> We apply for FREE for anything missing and available.</li>
+                    </ul>
+                </div>
 
-    <div class="salutation" id="salutation"></div>
+                <!-- Phase 2 -->
+                <div class="bg-teal-800 rounded-xl p-6 shadow-md relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl">⏱️</div>
+                    <span class="text-amber-400 font-bold text-sm tracking-wider uppercase mb-2 block">Phase 2</span>
+                    <h3 class="text-xl font-bold text-white mb-3">The 90-Day Pilot</h3>
+                    <p class="text-teal-100 text-sm mb-3 font-semibold">Requirement: Must actively pilot the NExUS app & share data.</p>
+                    <ul class="text-teal-50 text-sm space-y-2 relative z-10">
+                        <li class="flex items-start"><span class="text-amber-400 mr-2">•</span> Free Ad & Marketing management.</li>
+                        <li class="flex items-start"><span class="text-amber-400 mr-2">•</span> Free App & Software/Tech Stack management.</li>
+                    </ul>
+                </div>
 
-    <div class="letter-body" id="bodyText"></div>
+                <!-- Phase 3 -->
+                <div class="bg-white border-2 border-teal-700 rounded-xl p-6 shadow-md relative">
+                    <span class="text-teal-700 font-bold text-sm tracking-wider uppercase mb-2 block">Phase 3</span>
+                    <h3 class="text-xl font-bold text-stone-800 mb-3">The Conversion</h3>
+                    <ul class="text-stone-600 text-sm space-y-3">
+                        <li class="flex items-start"><span class="text-teal-600 mr-2">↳</span> <strong>NExUS App:</strong> Remains FREE FOREVER if they want to keep it.</li>
+                        <li class="flex items-start"><span class="text-teal-600 mr-2">↳</span> <strong>Services:</strong> Continued tech/marketing management for 10% of monthly value.</li>
+                        <li class="flex items-start"><span class="text-teal-600 mr-2">↳</span> <strong>Bonus:</strong> Free Google Ads management forever (if scalable & remaining on NExUS).</li>
+                    </ul>
+                </div>
 
-    <div class="ask-block" id="askBlock"></div>
+                <!-- Phase 4 -->
+                <div class="bg-stone-100 border border-stone-200 rounded-xl p-6 shadow-sm relative">
+                    <span class="text-stone-500 font-bold text-sm tracking-wider uppercase mb-2 block">Phase 4</span>
+                    <h3 class="text-xl font-bold text-stone-800 mb-3">The Network Effect</h3>
+                    <p class="text-stone-600 text-sm mb-3">The ultimate "Ask". If they keep the NExUS platform, we strongly encourage ecosystem adoption.</p>
+                    <p class="text-sm font-medium text-stone-800 p-3 bg-white rounded border border-stone-200">
+                        Require all new partners, affiliates, and donors to use NExUS, C4C, CMC, and CS for their NPO, MPA, Telecom, and Security needs.
+                    </p>
+                </div>
 
-    <div class="signature">
-      <div class="closing">In partnership and with deep respect,</div>
-      <div class="name">Chris Wooldridge</div>
-      <div class="title">Founder · Singularity Holdings PBC<br>NEXUS Civic OS · Atlas ID · Charges for Change</div>
-      <div class="badges">ATLAS-000001 · PATIENT ZERO · BENY #1</div>
-    </div>
+            </div>
+        </section>
 
-    <div class="letter-footer">
-      Singularity Holdings PBC · A Delaware Public Benefit Corporation · Pre-launch · NEXUS deployed at netlify.app
-    </div>
+        <section id="initiatives" class="mb-16 scroll-mt-20">
+            <div class="mb-8 border-b border-stone-200 pb-4">
+                <h2 class="text-2xl font-bold text-stone-800">Strategic Focus Areas (The "Doc")</h2>
+                <p class="text-stone-600 mt-2">Deep dive into specialized funding verticals critical for modern California NPOs in the greater Los Angeles area.</p>
+            </div>
 
-  </article>
-</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <div class="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="bg-stone-50 p-4 border-b border-stone-100 flex items-center">
+                        <span class="text-3xl mr-3">🏅</span>
+                        <h3 class="font-bold text-lg text-stone-800">LA28 Olympics Legacy</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-stone-600 text-sm mb-4">The LA28 organizing committee and affiliated foundations are aggressively funding community initiatives that align with Olympic values: youth sports, digital equity, and sustainable community infrastructure.</p>
+                        <ul class="text-sm text-stone-700 space-y-2 mb-4">
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>PlayLA Youth & Sports:</strong> Focus on accessibility.</li>
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>LA84 Foundation:</strong> Infrastructure and programs.</li>
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>Corporate Sponsors:</strong> Visa, Delta, Comcast community grants.</li>
+                        </ul>
+                        <p class="text-xs text-stone-500 italic">Strategy: Position Charges4 Change as a bridge for digital/physical accessibility in local communities ahead of the games.</p>
+                    </div>
+                </div>
 
-<script>
-// ════════════════════════════════════════════════════════════════════
-//  LOI DATA · 10 RECIPIENTS · TOP 5 + 5 ROUND-2 STUBS
-//  Edit any field below for permanent changes. Or click "Edit Inline" for quick tweaks.
-// ════════════════════════════════════════════════════════════════════
-const LOI_DATA = {
-  // ───────────────────────────────────────────────────────
-  // TOP 5 · ACTIVE OUTREACH
-  // ───────────────────────────────────────────────────────
+                <div class="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="bg-stone-50 p-4 border-b border-stone-100 flex items-center">
+                        <span class="text-3xl mr-3">🏙️</span>
+                        <h3 class="font-bold text-lg text-stone-800">LA Smart City Initiatives</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-stone-600 text-sm mb-4">Los Angeles is investing heavily in IoT, connectivity, and data-driven public services. Grants focus on closing the digital divide and creating sustainable urban tech solutions.</p>
+                        <ul class="text-sm text-stone-700 space-y-2 mb-4">
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>California Public Utilities (CPUC):</strong> Broadband adoption.</li>
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>LA Cleantech Incubator (LACI):</strong> Pilot project funding.</li>
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>Civic Tech Microgrants:</strong> Community data projects.</li>
+                        </ul>
+                        <p class="text-xs text-stone-500 italic">Strategy: Align hardware requests (chargers, tech hubs) with the city's broader connectivity and resilience master plans.</p>
+                    </div>
+                </div>
 
-  "people-concern": {
-    status: "active",
-    org: "The People Concern",
-    contactName: "Kiana Matthews",
-    contactTitle: "Director",
-    contactAddress: "The People Concern · Los Angeles, CA",
-    salutation: "Dear Kiana,",
-    subject: "NEXUS Civic OS — A Proposed Pilot Partnership with The People Concern",
-    paragraphs: [
-      "Before anything else: thank you. The day you helped me get my car out of impound was a turning point — not just logistically, but in confirming what I already suspected about The People Concern's character on the ground. That kind of intervention, on that kind of day, is exactly the operating ethos NEXUS was built to scale. I am writing to formally propose that you let me return that energy at a much larger scale.",
-      "I am the founder of <strong>Singularity Holdings PBC</strong>, a Delaware Public Benefit Corporation, and the architect of <strong>NEXUS</strong> — a deployed civic operating system designed by, with, and for unhoused individuals (we call them <em>Benies</em>). I am ATLAS-000001 — the first user, with lived experience that drove every design decision. NEXUS is 132 production screens, 22,000+ lines of code, with eleven integrated subsystems covering housing matching, healthcare logistics, identity, payments, and case management. It is live on Netlify. It runs on a $0/month stack. It is not a slide deck.",
-      "What I am proposing is a <strong>90-day pilot</strong> across two surfaces of The People Concern's operations. First, the <strong>Beny Hub</strong> — a multilingual progressive web app that gives your existing client base a private, consent-tiered map of services with real-time bed inventory, eligibility matching, and offline-capable wallet. Second, the <strong>F6 Caseworker Terminal</strong> — a Bloomberg-style intake and case management dashboard your outreach teams can use in the field, with VI-SPDAT scoring, CalAIM billing, video consent, and inter-agency messaging. Both are zero-cost to The People Concern during pilot, with a co-built impact report at day 90.",
-      "I would not be writing this letter to anyone whose work I had not already validated through personal experience. The People Concern earned that. I would be honored to have you as our first major services partner, and I am willing to align our public roadmap, branding, and grant calendar around that partnership if it serves your goals."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 30-minute introductory call to walk you through the deployed NEXUS environment.",
-        "A warm introduction to your Director of Programs or Outreach Operations lead.",
-        "Permission to list The People Concern as a pilot partner in our MIT Solve grant application (Sept 2026)."
-      ]
-    }
-  },
+                <div class="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden hover:shadow-md transition-shadow">
+                    <div class="bg-stone-50 p-4 border-b border-stone-100 flex items-center">
+                        <span class="text-3xl mr-3">🤖</span>
+                        <h3 class="font-bold text-lg text-stone-800">AI & Tech for Good</h3>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-stone-600 text-sm mb-4">Major tech players are offering specialized grants (both cash and massive computational credits) to NPOs utilizing AI to solve systemic issues or improve operational efficiency.</p>
+                        <ul class="text-sm text-stone-700 space-y-2 mb-4">
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>Google.org AI Opportunity Fund:</strong> Focus on workforce/education.</li>
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>Microsoft AI for Humanitarian Action:</strong> Azure credits & cash.</li>
+                            <li><span class="text-teal-600 font-bold">•</span> <strong>OpenAI / Anthropic:</strong> API credits for non-profits.</li>
+                        </ul>
+                        <p class="text-xs text-stone-500 italic">Strategy: Apply for software/API grants to automate Charges4 Change administrative tasks or enhance programmatic data analysis.</p>
+                    </div>
+                </div>
 
-  "center-hollywood": {
-    status: "active",
-    org: "The Center · Hollywood",
-    contactName: "Director of Programs",
-    contactTitle: "The LGBT Center · Hollywood",
-    contactAddress: "The LGBT Center · Hollywood, CA",
-    salutation: "To the Director of Programs,",
-    subject: "NEXUS Civic OS — Identity-Affirming Pilot Partnership for LGBTQ+ Unhoused Clients",
-    paragraphs: [
-      "I am writing because the work The Center does for LGBTQ+ unhoused youth and adults sits at the intersection of two truths most civic tech ignores: vulnerable populations need radically privacy-preserving tools, and identity-affirming design cannot be retrofitted. I built NEXUS with both truths embedded in the core architecture, and I would like to propose a pilot partnership.",
-      "My name is Chris Wooldridge. I am the founder of <strong>Singularity Holdings PBC</strong>, a Delaware Public Benefit Corporation, and ATLAS-000001 — the first user of <strong>NEXUS</strong>, the civic operating system I designed from inside the experience of being unhoused. NEXUS is deployed: 132 production screens, eleven subsystems, a $0/month stack. It is not a pitch deck. It is a working platform looking for the partners who deserve to shape its next chapter.",
-      "The reason I am writing to you specifically: NEXUS has features <em>The Center</em> earned. <strong>Three-tier consent</strong> (full / matched / anonymous) so a closeted client can request services without exposing their identity. <strong>Self-identified flag system</strong> covering sexual orientation, gender identity, sex work history, and HIV status — used only for matching, never for surveillance. <strong>Seven-language support</strong> across the entire interface. <strong>A dedicated population resources hub</strong> filterable to LGBTQ+ affirming providers only. None of these are bolted on; they are how the database is shaped from the schema up.",
-      "I would like to propose a <strong>90-day pilot</strong> in which The Center becomes the first LGBTQ+ services anchor in NEXUS, gets a co-branded population hub, and shapes the privacy and language defaults for every queer Beny who enters the system after you. Zero cost during pilot. A co-built impact report at day 90. Featured partner status across the entire deployed network."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 30-minute call to walk through the privacy and identity-affirming architecture.",
-        "An introduction to your housing services or harm reduction lead.",
-        "Permission to list The Center as a launch partner in our public roadmap and MIT Solve grant application."
-      ]
-    }
-  },
+            </div>
+        </section>
 
-  "showers-for-hope": {
-    status: "active",
-    org: "Showers For Hope",
-    contactName: "Founder / Operations Lead",
-    contactTitle: "Showers For Hope",
-    contactAddress: "Showers For Hope · Los Angeles, CA",
-    salutation: "To the Showers For Hope team,",
-    subject: "NEXUS Civic OS — Real-Time Map Integration for Mobile Shower Routes",
-    paragraphs: [
-      "Mobile shower services solve a problem most platforms cannot even see, and you solve it on a route schedule that almost nobody outside your team actually knows in real time. That last gap — between your trucks being somewhere and unhoused folks knowing they are somewhere — is exactly the gap NEXUS is built to close. I would like to propose a pilot that closes it for you.",
-      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic operating system designed from inside the experience of being unhoused. NEXUS Beny Hub is a multilingual progressive web app with a live <strong>Leaflet/OpenStreetMap</strong> view, offline-capable, that any unhoused person can open without an account. Today it shows shelters, food, and clinics. Tomorrow, with you, it shows where the next Showers For Hope truck will be — and at what time.",
-      "What I am proposing is dead simple: a <strong>real-time map integration</strong> that surfaces your weekly route schedule in the NEXUS Map tab, with ETA countdowns, drop-pin locations, and push notifications to any Beny who has saved Showers For Hope as a favorite. We can ingest your schedule via a public Google Calendar, a JSON feed, or just a weekly CSV — whichever is least burden on your operations.",
-      "Zero cost during pilot. Co-branded visibility across the NEXUS map. A featured-partner case study we will pitch to LA County Department of Health and the LA28 procurement team. And — most importantly — every Beny near your route gets shower visibility on their phone the morning of, in their language, without surveillance."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 20-minute call to talk through your weekly route format and any data-sharing constraints.",
-        "Permission to ingest your public schedule into a Showers For Hope map layer in NEXUS.",
-        "Mutual willingness to be listed as a launch partner in our public roadmap."
-      ]
-    }
-  },
+        <section id="tracker" class="mb-16 scroll-mt-20">
+            <div class="mb-6 border-b border-stone-200 pb-4 flex flex-col md:flex-row justify-between items-end gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-stone-800">Opportunity Tracker (The "Sheet")</h2>
+                    <p class="text-stone-600 mt-2 text-sm">Interactive database for managing LOIs, applications, and sponsor touchpoints. Filter below to narrow down your pipeline.</p>
+                </div>
+                <div class="flex flex-wrap gap-2" id="filterContainer">
+                    <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-teal-700 text-white shadow-sm" data-filter="all">All</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-white text-stone-600 border border-stone-200 hover:bg-stone-50" data-filter="Tech/Software">Tech/Software</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-white text-stone-600 border border-stone-200 hover:bg-stone-50" data-filter="Hardware">Hardware</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-white text-stone-600 border border-stone-200 hover:bg-stone-50" data-filter="Marketing">Marketing</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-white text-stone-600 border border-stone-200 hover:bg-stone-50" data-filter="Funding/Grants">Funding/Grants</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full bg-white text-stone-600 border border-stone-200 hover:bg-stone-50" data-filter="Initiatives">Initiatives (LA/AI)</button>
+                </div>
+            </div>
 
-  "long-beach-msc": {
-    status: "active",
-    org: "Long Beach Multi-Service Center",
-    contactName: "Director / Operations Lead",
-    contactTitle: "Long Beach MSC",
-    contactAddress: "Long Beach Multi-Service Center · Long Beach, CA",
-    salutation: "To the Long Beach MSC leadership team,",
-    subject: "NEXUS Civic OS — F6 Caseworker Terminal Pilot for Long Beach MSC Operations",
-    paragraphs: [
-      "The Long Beach Multi-Service Center is one of the most operationally serious touchpoints in the LA County safety net — ID services, mail, intake, case management, all under one roof, all running on workflows that deserve software designed from the field up rather than the procurement memo down. I am writing to propose a 90-day pilot that gives your caseworkers exactly that.",
-      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic operating system. The piece I want to put in your hands is the <strong>F6 Caseworker Terminal</strong>: a seven-tab, Bloomberg-style intake and case management dashboard built specifically for the kind of work Long Beach MSC does every day. <strong>NHSG real-time bed inventory</strong>. <strong>VI-SPDAT scoring</strong> with auto-flag triage. <strong>Three-way WebRTC video consent</strong> for releases. <strong>CalAIM billing integration</strong>. <strong>Inter-agency messaging</strong>. <strong>A Benefits Cliff Predictor</strong> so caseworkers can show clients the math before recommending a wage step.",
-      "Every one of those features came from a real moment in a real intake. The platform runs on a <strong>$0/month stack</strong> — Groq for AI, Leaflet/OSM for maps, browser-side persistence, no per-seat license. It deploys as a progressive web app, works offline, and can be skinned to Long Beach MSC branding in 48 hours.",
-      "What I am proposing is a 90-day caseworker pilot — five to ten of your team members onboarded, real intake flows, weekly feedback loop, co-built impact report at day 90. Zero cost during pilot. The deliverable is a deployed terminal your team owns, training materials, and a written case study we will shop to LA County Homeless Services Authority on your behalf."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 30-minute call to walk through the F6 Terminal live and show you the case management workflows.",
-        "Identification of 5–10 caseworkers willing to pilot for 90 days with weekly check-ins.",
-        "Permission to feature Long Beach MSC as a launch partner in our MIT Solve grant application (Sept 2026)."
-      ]
-    }
-  },
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-stone-50 text-stone-500 text-xs uppercase tracking-wider border-b border-stone-200">
+                            <th class="p-4 font-medium">Opportunity Name</th>
+                            <th class="p-4 font-medium">Provider</th>
+                            <th class="p-4 font-medium">Category</th>
+                            <th class="p-4 font-medium">Value / Amount</th>
+                            <th class="p-4 font-medium">Deadline</th>
+                            <th class="p-4 font-medium">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trackerTableBody" class="text-sm text-stone-700 divide-y divide-stone-100">
+                    </tbody>
+                </table>
+                <div id="noDataMessage" class="hidden p-8 text-center text-stone-500 italic">
+                    No opportunities match the selected filter.
+                </div>
+            </div>
+        </section>
 
-  "cedars-sinai": {
-    status: "active",
-    org: "Cedars-Sinai Medical Center",
-    contactName: "Director · Community Benefit / Social Determinants",
-    contactTitle: "Cedars-Sinai Medical Center",
-    contactAddress: "Cedars-Sinai Medical Center · Los Angeles, CA",
-    salutation: "To the Community Benefit team,",
-    subject: "NEXUS Civic OS — Reducing ED Readmits via the ED-to-Housing Pathway",
-    paragraphs: [
-      "I am writing through the findhelp.org partner channel because the readmission problem your emergency department faces — unhoused patients cycling through the ED because there is nowhere to discharge them to — is the exact problem NEXUS was architected to solve. I would like to propose a pilot that gives Cedars-Sinai a measurable, billable, social-determinants-of-health intervention with day-90 outcomes data.",
-      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic operating system designed from inside lived experience of being unhoused. NEXUS includes <strong>VITALIS</strong>, an autonomous healthcare logistics layer, and an <strong>ED-to-housing pathway</strong> that converts a discharge planner's referral into a matched bed, transport authorization, and follow-up case worker handoff in under fifteen minutes. The pathway carries CalAIM billing, integrates with CLEAR and b.well, and produces a real-time dashboard your community benefit team can show the IRS in your 990.",
-      "<div class='pull'>Every reduction in 30-day ED readmits among unhoused patients pays for the program many times over. The math is the easy part. The hard part is the rails — and we have already built the rails.</div>",
-      "What I am proposing is a <strong>90-day discharge-pathway pilot</strong> with one ED unit, ten to twenty-five eligible patients per month, day-90 readmit data, a co-built impact report, and a publishable case study aligned with your community benefit reporting calendar. Zero cost to Cedars-Sinai during pilot. Featured partner status, co-branded materials, and a procurement-grade reference for the LA28 Olympics health-services workstream."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 30-minute call with your community benefit / social determinants lead.",
-        "An introduction to one ED discharge planner willing to pilot the pathway for 90 days.",
-        "Permission to feature Cedars-Sinai as a healthcare anchor in our MIT Solve grant application (Sept 2026)."
-      ]
-    }
-  },
+    </main>
 
-  // ───────────────────────────────────────────────────────
-  // ROUND 2 · STUBS (light personalization, ready to refine)
-  // ───────────────────────────────────────────────────────
+    <footer class="bg-stone-900 text-stone-400 py-8 text-center text-sm">
+        <p>&copy; 2026 Strategy & Analytics Dashboard. Designed for internal tracking and strategy formulation.</p>
+    </footer>
 
-  "saban-clinic": {
-    status: "round2",
-    org: "The Saban Community Clinic",
-    contactName: "Director · Community Programs",
-    contactTitle: "The Saban Community Clinic",
-    contactAddress: "The Saban Community Clinic · Los Angeles, CA",
-    salutation: "To the Saban Clinic leadership team,",
-    subject: "NEXUS Civic OS — Pilot Partnership for Federally Qualified Health Center Workflows",
-    paragraphs: [
-      "The Saban Clinic has been one of LA's most durable safety-net health institutions for half a century, and the FQHC patient population you serve is the exact population NEXUS was designed to support. I am writing to propose a pilot that supplements your existing case management with a deployed civic operating system, at zero cost, for 90 days.",
-      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic OS with 132 screens and eleven subsystems, designed from lived experience of being unhoused. The Beny Hub gives your patients a privacy-first, multilingual map of services. The F6 Caseworker Terminal gives your case managers a Bloomberg-style intake dashboard with CalAIM billing, VI-SPDAT scoring, and bed inventory.",
-      "I would like 30 minutes to walk you through the deployment and a path to a 90-day pilot that strengthens Saban's position with HRSA reporting and LA County DHS contracting."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 30-minute discovery call.",
-        "Introduction to your community programs or population health lead.",
-        "Permission to list Saban as a pilot partner in MIT Solve grant materials."
-      ]
-    }
-  },
+    <script>
+        const opportunitiesData = [
+            { id: 1, name: "Google Ad Grants", provider: "Google.org", category: "Marketing", amount: "$10,000/mo (In-kind)", amountNum: 120000, deadline: "Rolling", status: "Ready for LOI" },
+            { id: 2, name: "LA84 Foundation Play Equity", provider: "LA84 Foundation (LA28)", category: "Initiatives", amount: "$50,000", amountNum: 50000, deadline: "2026-06-15", status: "Researching" },
+            { id: 3, name: "AI for Humanitarian Action", provider: "Microsoft", category: "Initiatives", amount: "$100,000 (Credits+Cash)", amountNum: 100000, deadline: "2026-08-01", status: "Not Started" },
+            { id: 4, name: "TechSoup Hardware Catalyst", provider: "TechSoup", category: "Hardware", amount: "Discounted/Donated Tech", amountNum: 15000, deadline: "Rolling", status: "Registered" },
+            { id: 5, name: "California Community Foundation Core", provider: "CCF", category: "Funding/Grants", amount: "$75,000", amountNum: 75000, deadline: "2026-07-30", status: "Drafting Application" },
+            { id: 6, name: "Smart City Innovation Fund", provider: "City of LA", category: "Initiatives", amount: "$150,000", amountNum: 150000, deadline: "2026-09-15", status: "Partner Search" },
+            { id: 7, name: "AWS Imagine Grant", provider: "Amazon Web Services", category: "Tech/Software", amount: "$100,000 (Credits)", amountNum: 100000, deadline: "2026-05-31", status: "Ready for LOI" },
+            { id: 8, name: "Meta Elevate for Nonprofits", provider: "Meta", category: "Marketing", amount: "Training & Ad Credits", amountNum: 5000, deadline: "Rolling", status: "Not Started" },
+            { id: 9, name: "Ralph M. Parsons Foundation", provider: "Parsons Foundation", category: "Funding/Grants", amount: "Varies ($50k-$200k)", amountNum: 100000, deadline: "Rolling", status: "Researching" },
+            { id: 10, name: "OpenAI Non-Profit Access", provider: "OpenAI", category: "Tech/Software", amount: "API Credits", amountNum: 10000, deadline: "Rolling", status: "Applied" },
+            { id: 11, name: "Digital Equity Grant (CPUC)", provider: "State of CA", category: "Initiatives", amount: "$250,000", amountNum: 250000, deadline: "2026-10-01", status: "Not Started" },
+            { id: 12, name: "Canva Pro for Nonprofits", provider: "Canva", category: "Tech/Software", amount: "$150/yr (In-kind)", amountNum: 150, deadline: "Rolling", status: "Completed" }
+        ];
 
-  "community-food-bank": {
-    status: "round2",
-    org: "Community Space Food Bank",
-    contactName: "Gains",
-    contactTitle: "Founder / Operator · Community Space Food Bank",
-    contactAddress: "Community Space Food Bank · Los Angeles, CA",
-    salutation: "Dear Gains,",
-    subject: "NEXUS Civic OS — Map Integration & Beny Hub Pilot for Community Space Food Bank",
-    paragraphs: [
-      "Independent operators built the LA mutual-aid backbone, and Community Space is one of the cleanest examples of what that looks like when it is run with discipline. I want to propose a pilot that puts your distribution schedule in front of every unhoused person in the NEXUS map within a 5-mile radius, in their language, in real time.",
-      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic operating system. The integration is light: a public schedule feed, a NEXUS map layer, and a featured partner card. Zero cost. 90 days. Co-built impact report.",
-      "Independent operator to independent operator: I would like 20 minutes of your time."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 20-minute call to talk through schedule format and operational constraints.",
-        "Permission to ingest your distribution schedule into a Community Space map layer in NEXUS.",
-        "Mutual willingness to be listed as a launch partner."
-      ]
-    }
-  },
+        let currentFilter = 'all';
+        let chartsInstance = {};
 
-  "rio-hondo": {
-    status: "round2",
-    org: "Rio Hondo Community Mental Health Center",
-    contactName: "Director · Outpatient Services",
-    contactTitle: "Rio Hondo Community Mental Health Center",
-    contactAddress: "Rio Hondo Community Mental Health Center · Los Angeles, CA",
-    salutation: "To the Rio Hondo leadership team,",
-    subject: "NEXUS Civic OS — Mental Health Crisis Pathway Pilot",
-    paragraphs: [
-      "Behavioral health is the most under-served vector in unhoused services and the most consequential one. NEXUS was architected with mental health crisis routing as a first-class feature, not an afterthought. I am writing to propose a pilot.",
-      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic OS. The Beny Hub includes a multilingual self-triage flow with crisis hotline routing and warm handoff. The F6 Caseworker Terminal includes risk scoring, Mental Health Court referral templates, and CalAIM behavioral billing. We can integrate Rio Hondo as the named clinical partner for outpatient bridge appointments at zero cost for 90 days.",
-      "I would like 30 minutes to walk you through the architecture and the proposed pilot scope."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 30-minute discovery call with your outpatient or community programs lead.",
-        "Identification of one bridge-appointment workflow we can integrate during the pilot.",
-        "Permission to list Rio Hondo as a behavioral health pilot partner in MIT Solve materials."
-      ]
-    }
-  },
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
+        }
 
-  "safe-parking-la": {
-    status: "round2",
-    org: "Safe Parking LA",
-    contactName: "Andrew",
-    contactTitle: "Director · Safe Parking LA",
-    contactAddress: "Safe Parking LA · Los Angeles, CA",
-    salutation: "Dear Andrew,",
-    subject: "NEXUS Civic OS — Real-Time Lot Inventory & Beny Hub Pilot",
-    paragraphs: [
-      "Safe Parking LA solves a category of problem (vehicle-residing unhoused) that almost every other service provider ignores, and the housing ladder NEXUS' HAVEN subsystem is designed to climb starts at exactly your service. I want to propose a pilot integration that gets your real-time lot availability in front of vehicle-residing folks who do not yet know you exist.",
-      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic OS. The integration is straightforward: real-time lot availability surfaced in the NEXUS Map tab, eligibility prefilter, intake form pre-population, and warm handoff to your team. Plus — and this is the part I think you will like most — the <strong>HAVEN</strong> subsystem includes a vehicle-donation rail and van-conversion pipeline that we can fund-stack against the people you are already serving.",
-      "I would love 30 minutes of your time."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 30-minute call to talk through lot data and HAVEN handoff workflows.",
-        "Permission to integrate Safe Parking LA as the vehicle-residing services anchor in NEXUS.",
-        "Permission to list Safe Parking LA as a launch partner in MIT Solve materials."
-      ]
-    }
-  },
+        function getStatusBadge(status) {
+            const styles = {
+                "Ready for LOI": "bg-blue-100 text-blue-800",
+                "Researching": "bg-purple-100 text-purple-800",
+                "Not Started": "bg-stone-100 text-stone-800",
+                "Registered": "bg-indigo-100 text-indigo-800",
+                "Drafting Application": "bg-amber-100 text-amber-800",
+                "Partner Search": "bg-pink-100 text-pink-800",
+                "Applied": "bg-teal-100 text-teal-800",
+                "Completed": "bg-green-100 text-green-800"
+            };
+            const style = styles[status] || "bg-gray-100 text-gray-800";
+            return `<span class="px-2 py-1 rounded-full text-xs font-semibold ${style}">${status}</span>`;
+        }
 
-  "ble-health": {
-    status: "round2",
-    org: "Ble Health",
-    contactName: "Partnership Lead",
-    contactTitle: "Ble Health",
-    contactAddress: "Ble Health · Los Angeles, CA",
-    salutation: "To the Ble Health partnerships team,",
-    subject: "NEXUS Civic OS — Integration Partnership for Unhoused Patient Pathways",
-    paragraphs: [
-      "Ble Health's positioning at the intersection of community health technology and underserved populations makes you a structural fit for what NEXUS is building. I am writing to propose an integration partnership — not a vendor relationship, not a one-off pilot, but a real technical and go-to-market alignment.",
-      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic OS with eleven subsystems, including VITALIS (healthcare logistics) and the ED-to-housing pathway. We are looking for a clinical technology partner whose stack and patient population complement ours, and whose go-to-market motion can co-sell into LA County DHS, LAHSA, and the LA28 health-services procurement.",
-      "I would like 45 minutes to share the architecture, talk through where our roadmaps overlap, and explore a co-built reference customer story."
-    ],
-    askBlock: {
-      label: "WHAT I AM ASKING",
-      items: [
-        "A 45-minute partnership exploration call.",
-        "An introduction to your clinical product and partnerships leads.",
-        "Mutual evaluation of a co-branded reference customer story for LA County DHS procurement."
-      ]
-    }
-  },
-};
+        function renderTable(data) {
+            const tbody = document.getElementById('trackerTableBody');
+            const noData = document.getElementById('noDataMessage');
+            tbody.innerHTML = '';
 
-// ════════════════════════════════════════════════════════════════════
-//  RENDER ENGINE
-// ════════════════════════════════════════════════════════════════════
-function renderLetter(key) {
-  const loi = LOI_DATA[key];
-  if (!loi) return;
+            if (data.length === 0) {
+                noData.classList.remove('hidden');
+                return;
+            }
+            noData.classList.add('hidden');
 
-  // Date
-  const today = new Date();
-  const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  document.getElementById('dateLine').textContent = dateStr.toUpperCase();
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-stone-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-4 font-medium text-stone-900">${item.name}</td>
+                    <td class="p-4">${item.provider}</td>
+                    <td class="p-4"><span class="text-xs text-stone-500 border border-stone-200 rounded px-2 py-1 bg-white">${item.category}</span></td>
+                    <td class="p-4 font-mono text-xs">${item.amount}</td>
+                    <td class="p-4">${item.deadline}</td>
+                    <td class="p-4">${getStatusBadge(item.status)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-  // Recipient block
-  document.getElementById('recipientBlock').innerHTML = `
-    <div class="recipient-name">${loi.contactName}</div>
-    <div class="recipient-title">${loi.contactTitle}</div>
-    <div>${loi.contactAddress}</div>
-  `;
+        function updateStats(data) {
+            const totalValue = data.reduce((sum, item) => sum + item.amountNum, 0);
+            document.getElementById('totalValueStat').innerText = formatCurrency(totalValue) + "+";
+            document.getElementById('totalOppsStat').innerText = data.length;
 
-  // Subject
-  document.getElementById('subjectText').textContent = loi.subject;
+            const strictDates = data.filter(d => d.deadline !== 'Rolling').map(d => new Date(d.deadline));
+            if (strictDates.length > 0) {
+                const nextDate = new Date(Math.min(...strictDates));
+                document.getElementById('nextDeadlineStat').innerText = nextDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            } else {
+                document.getElementById('nextDeadlineStat').innerText = "Rolling";
+            }
+        }
 
-  // Salutation
-  document.getElementById('salutation').textContent = loi.salutation;
+        function initCharts(data) {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { font: { family: "'Inter', sans-serif" }, boxWidth: 12 } }
+                }
+            };
 
-  // Body
-  const bodyHTML = loi.paragraphs.map(p => `<p>${p}</p>`).join('');
-  document.getElementById('bodyText').innerHTML = bodyHTML;
+            // Category Doughnut Chart
+            const categoryCounts = {};
+            data.forEach(d => { categoryCounts[d.category] = (categoryCounts[d.category] || 0) + 1; });
+            
+            const ctxCat = document.getElementById('categoryChart').getContext('2d');
+            if(chartsInstance.cat) chartsInstance.cat.destroy();
+            chartsInstance.cat = new Chart(ctxCat, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categoryCounts),
+                    datasets: [{
+                        data: Object.values(categoryCounts),
+                        backgroundColor: ['#0f766e', '#0369a1', '#b45309', '#be185d', '#4338ca'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    ...chartOptions,
+                    cutout: '70%'
+                }
+            });
 
-  // Ask block
-  const askHTML = `
-    <div class="label">${loi.askBlock.label}</div>
-    <ul>${loi.askBlock.items.map(i => `<li>${i}</li>`).join('')}</ul>
-  `;
-  document.getElementById('askBlock').innerHTML = askHTML;
+            // Timeline Bar Chart (Excluding 'Rolling')
+            const timelineData = {};
+            data.filter(d => d.deadline !== 'Rolling').forEach(d => {
+                const month = new Date(d.deadline).toLocaleString('default', { month: 'short', year: 'numeric' });
+                timelineData[month] = (timelineData[month] || 0) + 1;
+            });
 
-  // Status badge
-  const badgeEl = document.getElementById('statusBadge');
-  if (loi.status === 'active') {
-    badgeEl.innerHTML = '<span class="status-badge active">● TOP 5 · ACTIVE</span>';
-  } else {
-    badgeEl.innerHTML = '<span class="status-badge round2">○ ROUND 2 · STUB</span>';
-  }
+            const sortedMonths = Object.keys(timelineData).sort((a, b) => new Date(a) - new Date(b));
+            const monthCounts = sortedMonths.map(m => timelineData[m]);
 
-  // Update document title for PDF filename
-  document.title = `LOI · ${loi.org} · ${dateStr.replace(/,/g, '')}`;
-}
+            const ctxTime = document.getElementById('timelineChart').getContext('2d');
+            if(chartsInstance.time) chartsInstance.time.destroy();
+            chartsInstance.time = new Chart(ctxTime, {
+                type: 'bar',
+                data: {
+                    labels: sortedMonths,
+                    datasets: [{
+                        label: 'Deadlines per Month',
+                        data: monthCounts,
+                        backgroundColor: '#14b8a6',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    ...chartOptions,
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
 
-// ════════════════════════════════════════════════════════════════════
-//  POPULATE DROPDOWN
-// ════════════════════════════════════════════════════════════════════
-function populateDropdown() {
-  const sel = document.getElementById('recipientSelect');
-  const top5 = Object.entries(LOI_DATA).filter(([k,v]) => v.status === 'active');
-  const r2 = Object.entries(LOI_DATA).filter(([k,v]) => v.status === 'round2');
+        function applyFilters() {
+            let filteredData = opportunitiesData;
+            if (currentFilter !== 'all') {
+                filteredData = opportunitiesData.filter(item => item.category === currentFilter);
+            }
+            renderTable(filteredData);
+            // We do not update overall stats or charts on table filter to maintain the global picture at the top
+        }
 
-  let html = '<optgroup label="TOP 5 · Active Outreach">';
-  top5.forEach(([k, v]) => { html += `<option value="${k}">${v.org}</option>`; });
-  html += '</optgroup>';
-  html += '<optgroup label="Round 2 · Stubs">';
-  r2.forEach(([k, v]) => { html += `<option value="${k}">${v.org}</option>`; });
-  html += '</optgroup>';
-  sel.innerHTML = html;
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable(opportunitiesData);
+            updateStats(opportunitiesData);
+            initCharts(opportunitiesData);
 
-  sel.addEventListener('change', e => renderLetter(e.target.value));
-}
+            // Filter Buttons Logic
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Update active state styling
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-teal-700', 'text-white', 'shadow-sm');
+                        b.classList.add('bg-white', 'text-stone-600');
+                    });
+                    e.target.classList.remove('bg-white', 'text-stone-600');
+                    e.target.classList.add('bg-teal-700', 'text-white', 'shadow-sm');
 
-// ════════════════════════════════════════════════════════════════════
-//  COPY PLAIN TEXT
-// ════════════════════════════════════════════════════════════════════
-function copyLetterText() {
-  const letterEl = document.getElementById('letter');
-  const txt = letterEl.innerText.trim();
-  navigator.clipboard.writeText(txt).then(() => {
-    const btn = event.target;
-    const orig = btn.textContent;
-    btn.textContent = '✓ COPIED';
-    setTimeout(() => { btn.textContent = orig; }, 1500);
-  });
-}
-
-// ════════════════════════════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  populateDropdown();
-  // Default to People Concern (warmest intro)
-  document.getElementById('recipientSelect').value = 'people-concern';
-  renderLetter('people-concern');
-
-  // Allow inline editing on double-click anywhere in the letter body
-  const letter = document.getElementById('letter');
-  letter.addEventListener('dblclick', () => {
-    letter.contentEditable = (letter.contentEditable === 'true') ? 'false' : 'true';
-    if (letter.contentEditable === 'true') letter.focus();
-  });
-});
-</script>
-
+                    currentFilter = e.target.getAttribute('data-filter');
+                    applyFilters();
+                });
+            });
+        });
+    </script>
 </body>
 </html>
