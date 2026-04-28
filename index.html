@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS LOI Generator · Singularity Holdings PBC</title>
+
+<!-- ════════════════════════════════════════════════════════════════════
+  NEXUS LOI GENERATOR · v1.0
+  Generic-first: edit ONE letter object → infinite recipients.
+  Top 5 (active outreach) + 5 round-2 stubs ready.
+  Print to PDF, save, send. Single-file HTML.
+  ════════════════════════════════════════════════════════════════════ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper:        #f8f1de;     /* warm cream/ivory paper */
+  --paper-edge:   #ebd9b3;
+  --ink:          #1a2628;
+  --ink-soft:     #2c3e42;
+  --ink-faint:    #5a6c70;
+  --teal:         #0d9488;
+  --teal-deep:    #075057;
+  --gold:         #c8951e;
+  --coral:        #d05b4f;
+
+  --trench-deep:  #03161a;
+  --trench-mid:   #062028;
+  --chrome-ink:   #d8e8e6;
+  --chrome-faint: rgba(216, 232, 230, 0.18);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  background: var(--trench-deep);
+  font-family: 'Syne', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: var(--chrome-ink);
+  min-height: 100vh;
+}
+
+/* ════════════════ ADMIN CHROME (hidden in print) ════════════════ */
+.admin-chrome {
+  background: var(--trench-mid);
+  border-bottom: 1px solid var(--chrome-faint);
+  padding: 1.5rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(12px);
+}
+
+.admin-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.admin-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.15em;
+  color: var(--chrome-ink);
+}
+.admin-title span { color: var(--gold); }
+
+.admin-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(216, 232, 230, 0.6);
+  margin-right: 0.5rem;
+}
+
+select, button.admin-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  background: var(--trench-deep);
+  color: var(--chrome-ink);
+  border: 1px solid var(--chrome-faint);
+  padding: 0.6rem 0.9rem;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+select { min-width: 280px; }
+select:hover, button.admin-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+button.admin-btn.primary {
+  background: var(--gold);
+  color: var(--trench-deep);
+  border-color: var(--gold);
+  font-weight: 500;
+}
+button.admin-btn.primary:hover {
+  background: #e8b53d;
+  border-color: #e8b53d;
+}
+
+.admin-tip {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(216, 232, 230, 0.5);
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+/* ════════════════ LETTER PAGE ════════════════ */
+.page-wrapper {
+  padding: 3rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.letter {
+  background: var(--paper);
+  width: 8.5in;
+  min-height: 11in;
+  max-width: 100%;
+  padding: 1in 0.85in;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.3);
+  color: var(--ink);
+  position: relative;
+  font-family: 'Syne', sans-serif;
+  background-image:
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-edge) 100%);
+}
+
+.letter::before {
+  /* subtle paper grain */
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* ════════════════ LETTERHEAD ════════════════ */
+.letterhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1.25rem;
+  border-bottom: 2px solid var(--teal-deep);
+  margin-bottom: 0.4rem;
+  position: relative;
+}
+.letterhead::after {
+  content: '';
+  position: absolute;
+  bottom: -6px; left: 0;
+  width: 100px; height: 2px;
+  background: var(--gold);
+}
+
+.letterhead-mark {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  color: var(--teal-deep);
+}
+.letterhead-mark .accent { color: var(--gold); }
+
+.letterhead-mark .sub {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--ink-faint);
+  margin-top: 0.3rem;
+  font-weight: 400;
+}
+
+.letterhead-contact {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  text-align: right;
+}
+.letterhead-contact .name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--teal-deep);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+/* ════════════════ LETTER BODY ════════════════ */
+.letter-meta {
+  margin-top: 2rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+}
+
+.recipient-block {
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.recipient-block .recipient-name {
+  font-weight: 600;
+}
+.recipient-block .recipient-title {
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.subject-line {
+  margin-top: 1.5rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid rgba(7, 80, 87, 0.2);
+  border-bottom: 1px solid rgba(7, 80, 87, 0.2);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--teal-deep);
+}
+.subject-line strong {
+  font-family: 'DM Mono', monospace;
+  font-style: normal;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-right: 0.6rem;
+  font-weight: 500;
+}
+
+.salutation {
+  margin-top: 1.75rem;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.letter-body {
+  margin-top: 1rem;
+}
+.letter-body p {
+  font-size: 0.97rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  color: var(--ink);
+  text-align: justify;
+  hyphens: auto;
+}
+.letter-body p strong {
+  color: var(--teal-deep);
+}
+
+.letter-body .pull {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--teal-deep);
+  border-left: 3px solid var(--gold);
+  padding: 0.4rem 0 0.4rem 1rem;
+  margin: 1rem 0;
+}
+
+/* ════════════════ ASK BLOCK ════════════════ */
+.ask-block {
+  margin-top: 1.25rem;
+  background: rgba(13, 148, 136, 0.06);
+  border: 1px solid rgba(7, 80, 87, 0.25);
+  border-left: 4px solid var(--gold);
+  padding: 1rem 1.2rem;
+}
+.ask-block .label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.ask-block ul {
+  list-style: none;
+  padding: 0;
+}
+.ask-block li {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  padding: 0.3rem 0 0.3rem 1.2rem;
+  position: relative;
+  color: var(--ink);
+}
+.ask-block li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--coral);
+  font-weight: 700;
+}
+
+/* ════════════════ SIGNATURE BLOCK ════════════════ */
+.signature {
+  margin-top: 2rem;
+}
+.signature .closing {
+  font-size: 0.97rem;
+  color: var(--ink);
+  margin-bottom: 3.5rem;
+}
+.signature .name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: var(--teal-deep);
+}
+.signature .title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  margin-top: 0.2rem;
+}
+.signature .badges {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 0.4rem;
+}
+
+/* ════════════════ FOOTER ════════════════ */
+.letter-footer {
+  margin-top: 2rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(7, 80, 87, 0.2);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  color: var(--ink-faint);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ════════════════ STATUS BADGE ════════════════ */
+.status-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+.status-badge.active {
+  background: rgba(78, 240, 168, 0.15);
+  color: #4ef0a8;
+  border: 1px solid rgba(78, 240, 168, 0.4);
+}
+.status-badge.round2 {
+  background: rgba(200, 149, 30, 0.15);
+  color: var(--gold);
+  border: 1px solid rgba(200, 149, 30, 0.4);
+}
+
+/* ════════════════ PRINT STYLES (PDF EXPORT) ════════════════ */
+@media print {
+  @page { size: letter portrait; margin: 0; }
+  html, body { background: white; }
+  .admin-chrome, .admin-tip { display: none !important; }
+  .page-wrapper { padding: 0; }
+  .letter {
+    box-shadow: none;
+    width: 100%;
+    min-height: 11in;
+    max-width: none;
+    padding: 0.85in 0.85in;
+  }
+}
+
+@media (max-width: 700px) {
+  .letter { padding: 0.5in 0.4in; }
+  .letterhead { flex-direction: column; gap: 0.75rem; }
+  .letterhead-contact { text-align: left; }
+  .admin-row { flex-direction: column; align-items: stretch; }
+  select { min-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="admin-chrome no-print">
+  <div class="admin-row">
+    <div class="admin-title">NEXUS · <span>LOI</span> · GENERATOR</div>
+    <div style="display:flex; align-items:center; gap:0.5rem;">
+      <span class="admin-label">Recipient</span>
+      <select id="recipientSelect"></select>
+    </div>
+    <button class="admin-btn primary" onclick="window.print()">⎙ Print / Save PDF</button>
+    <button class="admin-btn" onclick="copyLetterText()">⎘ Copy Plain Text</button>
+    <span id="statusBadge"></span>
+  </div>
+  <div class="admin-tip">
+    Edit the letter directly inline — content is contenteditable. Or update the LOI_DATA object in source for permanent edits. Print uses recipient name as filename.
+  </div>
+</div>
+
+<div class="page-wrapper">
+  <article class="letter" id="letter" contenteditable="false">
+
+    <header class="letterhead">
+      <div class="letterhead-mark">
+        NEXUS<span class="accent">.</span>
+        <span class="sub">SINGULARITY HOLDINGS PBC · CIVIC OS</span>
+      </div>
+      <div class="letterhead-contact">
+        <span class="name">Chris Wooldridge</span>
+        Founder · ATLAS-000001<br>
+        chris@singularityholdings.org<br>
+        (213) 854-8337<br>
+        Los Angeles, California
+      </div>
+    </header>
+
+    <div class="letter-meta" id="dateLine">— DATE —</div>
+
+    <div class="recipient-block" id="recipientBlock"></div>
+
+    <div class="subject-line"><strong>RE:</strong> <span id="subjectText"></span></div>
+
+    <div class="salutation" id="salutation"></div>
+
+    <div class="letter-body" id="bodyText"></div>
+
+    <div class="ask-block" id="askBlock"></div>
+
+    <div class="signature">
+      <div class="closing">In partnership and with deep respect,</div>
+      <div class="name">Chris Wooldridge</div>
+      <div class="title">Founder · Singularity Holdings PBC<br>NEXUS Civic OS · Atlas ID · Charges for Change</div>
+      <div class="badges">ATLAS-000001 · PATIENT ZERO · BENY #1</div>
+    </div>
+
+    <div class="letter-footer">
+      Singularity Holdings PBC · A Delaware Public Benefit Corporation · Pre-launch · NEXUS deployed at netlify.app
+    </div>
+
+  </article>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════
+//  LOI DATA · 10 RECIPIENTS · TOP 5 + 5 ROUND-2 STUBS
+//  Edit any field below for permanent changes. Or click "Edit Inline" for quick tweaks.
+// ════════════════════════════════════════════════════════════════════
+const LOI_DATA = {
+  // ───────────────────────────────────────────────────────
+  // TOP 5 · ACTIVE OUTREACH
+  // ───────────────────────────────────────────────────────
+
+  "people-concern": {
+    status: "active",
+    org: "The People Concern",
+    contactName: "Kiana Matthews",
+    contactTitle: "Director",
+    contactAddress: "The People Concern · Los Angeles, CA",
+    salutation: "Dear Kiana,",
+    subject: "NEXUS Civic OS — A Proposed Pilot Partnership with The People Concern",
+    paragraphs: [
+      "Before anything else: thank you. The day you helped me get my car out of impound was a turning point — not just logistically, but in confirming what I already suspected about The People Concern's character on the ground. That kind of intervention, on that kind of day, is exactly the operating ethos NEXUS was built to scale. I am writing to formally propose that you let me return that energy at a much larger scale.",
+      "I am the founder of <strong>Singularity Holdings PBC</strong>, a Delaware Public Benefit Corporation, and the architect of <strong>NEXUS</strong> — a deployed civic operating system designed by, with, and for unhoused individuals (we call them <em>Benies</em>). I am ATLAS-000001 — the first user, with lived experience that drove every design decision. NEXUS is 132 production screens, 22,000+ lines of code, with eleven integrated subsystems covering housing matching, healthcare logistics, identity, payments, and case management. It is live on Netlify. It runs on a $0/month stack. It is not a slide deck.",
+      "What I am proposing is a <strong>90-day pilot</strong> across two surfaces of The People Concern's operations. First, the <strong>Beny Hub</strong> — a multilingual progressive web app that gives your existing client base a private, consent-tiered map of services with real-time bed inventory, eligibility matching, and offline-capable wallet. Second, the <strong>F6 Caseworker Terminal</strong> — a Bloomberg-style intake and case management dashboard your outreach teams can use in the field, with VI-SPDAT scoring, CalAIM billing, video consent, and inter-agency messaging. Both are zero-cost to The People Concern during pilot, with a co-built impact report at day 90.",
+      "I would not be writing this letter to anyone whose work I had not already validated through personal experience. The People Concern earned that. I would be honored to have you as our first major services partner, and I am willing to align our public roadmap, branding, and grant calendar around that partnership if it serves your goals."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 30-minute introductory call to walk you through the deployed NEXUS environment.",
+        "A warm introduction to your Director of Programs or Outreach Operations lead.",
+        "Permission to list The People Concern as a pilot partner in our MIT Solve grant application (Sept 2026)."
+      ]
+    }
+  },
+
+  "center-hollywood": {
+    status: "active",
+    org: "The Center · Hollywood",
+    contactName: "Director of Programs",
+    contactTitle: "The LGBT Center · Hollywood",
+    contactAddress: "The LGBT Center · Hollywood, CA",
+    salutation: "To the Director of Programs,",
+    subject: "NEXUS Civic OS — Identity-Affirming Pilot Partnership for LGBTQ+ Unhoused Clients",
+    paragraphs: [
+      "I am writing because the work The Center does for LGBTQ+ unhoused youth and adults sits at the intersection of two truths most civic tech ignores: vulnerable populations need radically privacy-preserving tools, and identity-affirming design cannot be retrofitted. I built NEXUS with both truths embedded in the core architecture, and I would like to propose a pilot partnership.",
+      "My name is Chris Wooldridge. I am the founder of <strong>Singularity Holdings PBC</strong>, a Delaware Public Benefit Corporation, and ATLAS-000001 — the first user of <strong>NEXUS</strong>, the civic operating system I designed from inside the experience of being unhoused. NEXUS is deployed: 132 production screens, eleven subsystems, a $0/month stack. It is not a pitch deck. It is a working platform looking for the partners who deserve to shape its next chapter.",
+      "The reason I am writing to you specifically: NEXUS has features <em>The Center</em> earned. <strong>Three-tier consent</strong> (full / matched / anonymous) so a closeted client can request services without exposing their identity. <strong>Self-identified flag system</strong> covering sexual orientation, gender identity, sex work history, and HIV status — used only for matching, never for surveillance. <strong>Seven-language support</strong> across the entire interface. <strong>A dedicated population resources hub</strong> filterable to LGBTQ+ affirming providers only. None of these are bolted on; they are how the database is shaped from the schema up.",
+      "I would like to propose a <strong>90-day pilot</strong> in which The Center becomes the first LGBTQ+ services anchor in NEXUS, gets a co-branded population hub, and shapes the privacy and language defaults for every queer Beny who enters the system after you. Zero cost during pilot. A co-built impact report at day 90. Featured partner status across the entire deployed network."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 30-minute call to walk through the privacy and identity-affirming architecture.",
+        "An introduction to your housing services or harm reduction lead.",
+        "Permission to list The Center as a launch partner in our public roadmap and MIT Solve grant application."
+      ]
+    }
+  },
+
+  "showers-for-hope": {
+    status: "active",
+    org: "Showers For Hope",
+    contactName: "Founder / Operations Lead",
+    contactTitle: "Showers For Hope",
+    contactAddress: "Showers For Hope · Los Angeles, CA",
+    salutation: "To the Showers For Hope team,",
+    subject: "NEXUS Civic OS — Real-Time Map Integration for Mobile Shower Routes",
+    paragraphs: [
+      "Mobile shower services solve a problem most platforms cannot even see, and you solve it on a route schedule that almost nobody outside your team actually knows in real time. That last gap — between your trucks being somewhere and unhoused folks knowing they are somewhere — is exactly the gap NEXUS is built to close. I would like to propose a pilot that closes it for you.",
+      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic operating system designed from inside the experience of being unhoused. NEXUS Beny Hub is a multilingual progressive web app with a live <strong>Leaflet/OpenStreetMap</strong> view, offline-capable, that any unhoused person can open without an account. Today it shows shelters, food, and clinics. Tomorrow, with you, it shows where the next Showers For Hope truck will be — and at what time.",
+      "What I am proposing is dead simple: a <strong>real-time map integration</strong> that surfaces your weekly route schedule in the NEXUS Map tab, with ETA countdowns, drop-pin locations, and push notifications to any Beny who has saved Showers For Hope as a favorite. We can ingest your schedule via a public Google Calendar, a JSON feed, or just a weekly CSV — whichever is least burden on your operations.",
+      "Zero cost during pilot. Co-branded visibility across the NEXUS map. A featured-partner case study we will pitch to LA County Department of Health and the LA28 procurement team. And — most importantly — every Beny near your route gets shower visibility on their phone the morning of, in their language, without surveillance."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 20-minute call to talk through your weekly route format and any data-sharing constraints.",
+        "Permission to ingest your public schedule into a Showers For Hope map layer in NEXUS.",
+        "Mutual willingness to be listed as a launch partner in our public roadmap."
+      ]
+    }
+  },
+
+  "long-beach-msc": {
+    status: "active",
+    org: "Long Beach Multi-Service Center",
+    contactName: "Director / Operations Lead",
+    contactTitle: "Long Beach MSC",
+    contactAddress: "Long Beach Multi-Service Center · Long Beach, CA",
+    salutation: "To the Long Beach MSC leadership team,",
+    subject: "NEXUS Civic OS — F6 Caseworker Terminal Pilot for Long Beach MSC Operations",
+    paragraphs: [
+      "The Long Beach Multi-Service Center is one of the most operationally serious touchpoints in the LA County safety net — ID services, mail, intake, case management, all under one roof, all running on workflows that deserve software designed from the field up rather than the procurement memo down. I am writing to propose a 90-day pilot that gives your caseworkers exactly that.",
+      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic operating system. The piece I want to put in your hands is the <strong>F6 Caseworker Terminal</strong>: a seven-tab, Bloomberg-style intake and case management dashboard built specifically for the kind of work Long Beach MSC does every day. <strong>NHSG real-time bed inventory</strong>. <strong>VI-SPDAT scoring</strong> with auto-flag triage. <strong>Three-way WebRTC video consent</strong> for releases. <strong>CalAIM billing integration</strong>. <strong>Inter-agency messaging</strong>. <strong>A Benefits Cliff Predictor</strong> so caseworkers can show clients the math before recommending a wage step.",
+      "Every one of those features came from a real moment in a real intake. The platform runs on a <strong>$0/month stack</strong> — Groq for AI, Leaflet/OSM for maps, browser-side persistence, no per-seat license. It deploys as a progressive web app, works offline, and can be skinned to Long Beach MSC branding in 48 hours.",
+      "What I am proposing is a 90-day caseworker pilot — five to ten of your team members onboarded, real intake flows, weekly feedback loop, co-built impact report at day 90. Zero cost during pilot. The deliverable is a deployed terminal your team owns, training materials, and a written case study we will shop to LA County Homeless Services Authority on your behalf."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 30-minute call to walk through the F6 Terminal live and show you the case management workflows.",
+        "Identification of 5–10 caseworkers willing to pilot for 90 days with weekly check-ins.",
+        "Permission to feature Long Beach MSC as a launch partner in our MIT Solve grant application (Sept 2026)."
+      ]
+    }
+  },
+
+  "cedars-sinai": {
+    status: "active",
+    org: "Cedars-Sinai Medical Center",
+    contactName: "Director · Community Benefit / Social Determinants",
+    contactTitle: "Cedars-Sinai Medical Center",
+    contactAddress: "Cedars-Sinai Medical Center · Los Angeles, CA",
+    salutation: "To the Community Benefit team,",
+    subject: "NEXUS Civic OS — Reducing ED Readmits via the ED-to-Housing Pathway",
+    paragraphs: [
+      "I am writing through the findhelp.org partner channel because the readmission problem your emergency department faces — unhoused patients cycling through the ED because there is nowhere to discharge them to — is the exact problem NEXUS was architected to solve. I would like to propose a pilot that gives Cedars-Sinai a measurable, billable, social-determinants-of-health intervention with day-90 outcomes data.",
+      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic operating system designed from inside lived experience of being unhoused. NEXUS includes <strong>VITALIS</strong>, an autonomous healthcare logistics layer, and an <strong>ED-to-housing pathway</strong> that converts a discharge planner's referral into a matched bed, transport authorization, and follow-up case worker handoff in under fifteen minutes. The pathway carries CalAIM billing, integrates with CLEAR and b.well, and produces a real-time dashboard your community benefit team can show the IRS in your 990.",
+      "<div class='pull'>Every reduction in 30-day ED readmits among unhoused patients pays for the program many times over. The math is the easy part. The hard part is the rails — and we have already built the rails.</div>",
+      "What I am proposing is a <strong>90-day discharge-pathway pilot</strong> with one ED unit, ten to twenty-five eligible patients per month, day-90 readmit data, a co-built impact report, and a publishable case study aligned with your community benefit reporting calendar. Zero cost to Cedars-Sinai during pilot. Featured partner status, co-branded materials, and a procurement-grade reference for the LA28 Olympics health-services workstream."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 30-minute call with your community benefit / social determinants lead.",
+        "An introduction to one ED discharge planner willing to pilot the pathway for 90 days.",
+        "Permission to feature Cedars-Sinai as a healthcare anchor in our MIT Solve grant application (Sept 2026)."
+      ]
+    }
+  },
+
+  // ───────────────────────────────────────────────────────
+  // ROUND 2 · STUBS (light personalization, ready to refine)
+  // ───────────────────────────────────────────────────────
+
+  "saban-clinic": {
+    status: "round2",
+    org: "The Saban Community Clinic",
+    contactName: "Director · Community Programs",
+    contactTitle: "The Saban Community Clinic",
+    contactAddress: "The Saban Community Clinic · Los Angeles, CA",
+    salutation: "To the Saban Clinic leadership team,",
+    subject: "NEXUS Civic OS — Pilot Partnership for Federally Qualified Health Center Workflows",
+    paragraphs: [
+      "The Saban Clinic has been one of LA's most durable safety-net health institutions for half a century, and the FQHC patient population you serve is the exact population NEXUS was designed to support. I am writing to propose a pilot that supplements your existing case management with a deployed civic operating system, at zero cost, for 90 days.",
+      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic OS with 132 screens and eleven subsystems, designed from lived experience of being unhoused. The Beny Hub gives your patients a privacy-first, multilingual map of services. The F6 Caseworker Terminal gives your case managers a Bloomberg-style intake dashboard with CalAIM billing, VI-SPDAT scoring, and bed inventory.",
+      "I would like 30 minutes to walk you through the deployment and a path to a 90-day pilot that strengthens Saban's position with HRSA reporting and LA County DHS contracting."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 30-minute discovery call.",
+        "Introduction to your community programs or population health lead.",
+        "Permission to list Saban as a pilot partner in MIT Solve grant materials."
+      ]
+    }
+  },
+
+  "community-food-bank": {
+    status: "round2",
+    org: "Community Space Food Bank",
+    contactName: "Gains",
+    contactTitle: "Founder / Operator · Community Space Food Bank",
+    contactAddress: "Community Space Food Bank · Los Angeles, CA",
+    salutation: "Dear Gains,",
+    subject: "NEXUS Civic OS — Map Integration & Beny Hub Pilot for Community Space Food Bank",
+    paragraphs: [
+      "Independent operators built the LA mutual-aid backbone, and Community Space is one of the cleanest examples of what that looks like when it is run with discipline. I want to propose a pilot that puts your distribution schedule in front of every unhoused person in the NEXUS map within a 5-mile radius, in their language, in real time.",
+      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic operating system. The integration is light: a public schedule feed, a NEXUS map layer, and a featured partner card. Zero cost. 90 days. Co-built impact report.",
+      "Independent operator to independent operator: I would like 20 minutes of your time."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 20-minute call to talk through schedule format and operational constraints.",
+        "Permission to ingest your distribution schedule into a Community Space map layer in NEXUS.",
+        "Mutual willingness to be listed as a launch partner."
+      ]
+    }
+  },
+
+  "rio-hondo": {
+    status: "round2",
+    org: "Rio Hondo Community Mental Health Center",
+    contactName: "Director · Outpatient Services",
+    contactTitle: "Rio Hondo Community Mental Health Center",
+    contactAddress: "Rio Hondo Community Mental Health Center · Los Angeles, CA",
+    salutation: "To the Rio Hondo leadership team,",
+    subject: "NEXUS Civic OS — Mental Health Crisis Pathway Pilot",
+    paragraphs: [
+      "Behavioral health is the most under-served vector in unhoused services and the most consequential one. NEXUS was architected with mental health crisis routing as a first-class feature, not an afterthought. I am writing to propose a pilot.",
+      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic OS. The Beny Hub includes a multilingual self-triage flow with crisis hotline routing and warm handoff. The F6 Caseworker Terminal includes risk scoring, Mental Health Court referral templates, and CalAIM behavioral billing. We can integrate Rio Hondo as the named clinical partner for outpatient bridge appointments at zero cost for 90 days.",
+      "I would like 30 minutes to walk you through the architecture and the proposed pilot scope."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 30-minute discovery call with your outpatient or community programs lead.",
+        "Identification of one bridge-appointment workflow we can integrate during the pilot.",
+        "Permission to list Rio Hondo as a behavioral health pilot partner in MIT Solve materials."
+      ]
+    }
+  },
+
+  "safe-parking-la": {
+    status: "round2",
+    org: "Safe Parking LA",
+    contactName: "Andrew",
+    contactTitle: "Director · Safe Parking LA",
+    contactAddress: "Safe Parking LA · Los Angeles, CA",
+    salutation: "Dear Andrew,",
+    subject: "NEXUS Civic OS — Real-Time Lot Inventory & Beny Hub Pilot",
+    paragraphs: [
+      "Safe Parking LA solves a category of problem (vehicle-residing unhoused) that almost every other service provider ignores, and the housing ladder NEXUS' HAVEN subsystem is designed to climb starts at exactly your service. I want to propose a pilot integration that gets your real-time lot availability in front of vehicle-residing folks who do not yet know you exist.",
+      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic OS. The integration is straightforward: real-time lot availability surfaced in the NEXUS Map tab, eligibility prefilter, intake form pre-population, and warm handoff to your team. Plus — and this is the part I think you will like most — the <strong>HAVEN</strong> subsystem includes a vehicle-donation rail and van-conversion pipeline that we can fund-stack against the people you are already serving.",
+      "I would love 30 minutes of your time."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 30-minute call to talk through lot data and HAVEN handoff workflows.",
+        "Permission to integrate Safe Parking LA as the vehicle-residing services anchor in NEXUS.",
+        "Permission to list Safe Parking LA as a launch partner in MIT Solve materials."
+      ]
+    }
+  },
+
+  "ble-health": {
+    status: "round2",
+    org: "Ble Health",
+    contactName: "Partnership Lead",
+    contactTitle: "Ble Health",
+    contactAddress: "Ble Health · Los Angeles, CA",
+    salutation: "To the Ble Health partnerships team,",
+    subject: "NEXUS Civic OS — Integration Partnership for Unhoused Patient Pathways",
+    paragraphs: [
+      "Ble Health's positioning at the intersection of community health technology and underserved populations makes you a structural fit for what NEXUS is building. I am writing to propose an integration partnership — not a vendor relationship, not a one-off pilot, but a real technical and go-to-market alignment.",
+      "I am Chris Wooldridge, founder of <strong>Singularity Holdings PBC</strong> and ATLAS-000001 — the first user of <strong>NEXUS</strong>, a deployed civic OS with eleven subsystems, including VITALIS (healthcare logistics) and the ED-to-housing pathway. We are looking for a clinical technology partner whose stack and patient population complement ours, and whose go-to-market motion can co-sell into LA County DHS, LAHSA, and the LA28 health-services procurement.",
+      "I would like 45 minutes to share the architecture, talk through where our roadmaps overlap, and explore a co-built reference customer story."
+    ],
+    askBlock: {
+      label: "WHAT I AM ASKING",
+      items: [
+        "A 45-minute partnership exploration call.",
+        "An introduction to your clinical product and partnerships leads.",
+        "Mutual evaluation of a co-branded reference customer story for LA County DHS procurement."
+      ]
+    }
+  },
+};
+
+// ════════════════════════════════════════════════════════════════════
+//  RENDER ENGINE
+// ════════════════════════════════════════════════════════════════════
+function renderLetter(key) {
+  const loi = LOI_DATA[key];
+  if (!loi) return;
+
+  // Date
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('dateLine').textContent = dateStr.toUpperCase();
+
+  // Recipient block
+  document.getElementById('recipientBlock').innerHTML = `
+    <div class="recipient-name">${loi.contactName}</div>
+    <div class="recipient-title">${loi.contactTitle}</div>
+    <div>${loi.contactAddress}</div>
+  `;
+
+  // Subject
+  document.getElementById('subjectText').textContent = loi.subject;
+
+  // Salutation
+  document.getElementById('salutation').textContent = loi.salutation;
+
+  // Body
+  const bodyHTML = loi.paragraphs.map(p => `<p>${p}</p>`).join('');
+  document.getElementById('bodyText').innerHTML = bodyHTML;
+
+  // Ask block
+  const askHTML = `
+    <div class="label">${loi.askBlock.label}</div>
+    <ul>${loi.askBlock.items.map(i => `<li>${i}</li>`).join('')}</ul>
+  `;
+  document.getElementById('askBlock').innerHTML = askHTML;
+
+  // Status badge
+  const badgeEl = document.getElementById('statusBadge');
+  if (loi.status === 'active') {
+    badgeEl.innerHTML = '<span class="status-badge active">● TOP 5 · ACTIVE</span>';
+  } else {
+    badgeEl.innerHTML = '<span class="status-badge round2">○ ROUND 2 · STUB</span>';
+  }
+
+  // Update document title for PDF filename
+  document.title = `LOI · ${loi.org} · ${dateStr.replace(/,/g, '')}`;
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  POPULATE DROPDOWN
+// ════════════════════════════════════════════════════════════════════
+function populateDropdown() {
+  const sel = document.getElementById('recipientSelect');
+  const top5 = Object.entries(LOI_DATA).filter(([k,v]) => v.status === 'active');
+  const r2 = Object.entries(LOI_DATA).filter(([k,v]) => v.status === 'round2');
+
+  let html = '<optgroup label="TOP 5 · Active Outreach">';
+  top5.forEach(([k, v]) => { html += `<option value="${k}">${v.org}</option>`; });
+  html += '</optgroup>';
+  html += '<optgroup label="Round 2 · Stubs">';
+  r2.forEach(([k, v]) => { html += `<option value="${k}">${v.org}</option>`; });
+  html += '</optgroup>';
+  sel.innerHTML = html;
+
+  sel.addEventListener('change', e => renderLetter(e.target.value));
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  COPY PLAIN TEXT
+// ════════════════════════════════════════════════════════════════════
+function copyLetterText() {
+  const letterEl = document.getElementById('letter');
+  const txt = letterEl.innerText.trim();
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = '✓ COPIED';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  populateDropdown();
+  // Default to People Concern (warmest intro)
+  document.getElementById('recipientSelect').value = 'people-concern';
+  renderLetter('people-concern');
+
+  // Allow inline editing on double-click anywhere in the letter body
+  const letter = document.getElementById('letter');
+  letter.addEventListener('dblclick', () => {
+    letter.contentEditable = (letter.contentEditable === 'true') ? 'false' : 'true';
+    if (letter.contentEditable === 'true') letter.focus();
+  });
+});
+</script>
+
+</body>
+</html>
